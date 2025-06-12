@@ -1,0 +1,1070 @@
+{
+  "name": "Home2U Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "99608d05-4006-450a-bde6-4eadc4efa3b0",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wBh09YLnAT3BnDGU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "86ec97f8-7bac-4e91-bacb-85f32facdb4d",
+              "name": "Email Context",
+              "value": "=Sender Email Address:\n{{ $json.From }}\n\nEmail Subject:\n{{ $json.Subject }}\n\nEmail Body:\n{{ $json.snippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        140,
+        0
+      ],
+      "id": "ff015507-04cf-4bc9-9b2f-0ca58bdb7700",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        180
+      ],
+      "id": "93cf5cfc-d325-4dab-b392-6801264937ee",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ka4dQvn8D4lffTUM",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"category\": { \"type\": \"string\" },\n    \"summary\": { \"type\": \"string\" },\n    \"name\": { \"type\": \"string\" },\n    \"email\": { \"type\": \"string\" },\n    \"unit\": { \"type\": \"string\" },\n    \"contact\": { \"type\": \"string\" },\n    \"time\": { \"type\": \"string\" }\n  },\n  \"required\": [\"category\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        180
+      ],
+      "id": "eb84b78d-0bda-4c8f-a86e-ffc77513fce0",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Urgent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f42c1188-d4b5-45d0-b97b-6d9c15434696"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Urgent"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7d47fa8a-481e-43b8-89de-e394cb304958",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "House Request",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "House Request"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "36b52a14-30aa-476e-88a0-adf2ac75def5",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Book House Cleaner",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Book House Cleaner"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6bd6be9f-5974-413d-be53-568d9612fa5b",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Other Housing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Other Housing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2c487b48-d3c1-4b42-8d24-086303233c1c",
+                    "leftValue": "={{ $json.output.category }}",
+                    "rightValue": "Irrelevant",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Irrelevant"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        620,
+        -40
+      ],
+      "id": "c576bc29-c6a6-4e07-98c6-726faa9a252c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "chatId": "7066132844",
+        "text": "=🚨 *URGENT PROPERTY ALERT* 🚨\n\nSummary: {{ $json.summary }}\nFrom: {{ $json.name }} \\( {{ $json.email }} \\)\nUnit: {{ $json.unit }}\nContact: {{ $json.contact }}\nTime: {{ $json.time }}\n\nPlease check immediately\\!",
+        "additionalFields": {
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        940,
+        -320
+      ],
+      "id": "1522e247-013c-4b7c-8621-9d5de72625b6",
+      "name": "Telegram",
+      "webhookId": "e13f0760-1d18-4699-a065-a59891b97887",
+      "credentials": {
+        "telegramApi": {
+          "id": "V045HLnWxHaMvVx7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI assistant helping a property manager triage incoming emails.\n\nYour task is to read the following email and classify it into one of the following categories:\n\nUrgent: Emergencies or time-sensitive issues (e.g. burst pipe, lockout)\n\nHouse Request: A potential tenant asking about renting a unit\n\nBook House Cleaner: A tenant asking to book a house cleaning service\n\nOther Housing: A message related to housing, but not one of the above, or any question the tenant might have\n\nIrrelevant: Spam or not related to housing or property management\n\nThen, extract the following details (if available):\n\nA short summary of the message\n\nSender's name\n\nSender's email\n\nUnit number\n\nPhone number or other contact info\n\nRequested date/time (especially if they want to book a cleaning)\n\nReturn your response in valid JSON with these keys:\n{\n  \"category\": \"...\",\n  \"summary\": \"...\",\n  \"name\": \"...\",\n  \"email\": \"...\",\n  \"unit\": \"...\",\n  \"contact\": \"...\",\n  \"time\": \"...\"\n}\nHere's the email content:\n\n{{ $json[\"Email Context\"] }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        300,
+        0
+      ],
+      "id": "2dd77d30-5730-4002-9f51-4cc385d35803",
+      "name": "AI"
+    },
+    {
+      "parameters": {
+        "jsCode": "function escapeMarkdownV2(text) {\n  if (!text) return '';\n  return text.replace(/([_\\*\\[\\]\\(\\)~`>#+\\-=|{}\\.!\\\\])/g, '\\\\$1');\n}\n\nconst output = $json.output || {};\n\nreturn [{\n  summary: escapeMarkdownV2(output.summary),\n  name: escapeMarkdownV2(output.name),\n  email: escapeMarkdownV2(output.email),\n  unit: escapeMarkdownV2(output.unit),\n  contact: escapeMarkdownV2(output.contact),\n  time: escapeMarkdownV2(output.time),\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        -320
+      ],
+      "id": "650d23fd-e206-4cdd-9c94-a2cb5491b417",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M",
+          "mode": "list",
+          "cachedResultName": "Home2U Apartment Inquiries",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('AI').item.json.output.name }}",
+            "Email": "={{ $('AI').item.json.output.email }}",
+            "Unit": "={{ $('AI').item.json.output.unit }}",
+            "Contact": "={{ $('AI').item.json.output.contact }}",
+            "Time": "={{ $json[\"timestamp\"] }}",
+            "Done": "no"
+          },
+          "matchingColumns": [
+            "asd"
+          ],
+          "schema": [
+            {
+              "id": "Unit",
+              "displayName": "Unit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Contact",
+              "displayName": "Contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Time",
+              "displayName": "Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Done",
+              "displayName": "Done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        940,
+        -180
+      ],
+      "id": "bd962f2c-4ea6-4fa2-aef8-02182ece8ee6",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jf9fMWOSs2zKvP26",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b71c0e4c-999c-4984-87ca-0b0db2500b96",
+              "name": "timestamp",
+              "value": "={{ new Date().toISOString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        -180
+      ],
+      "id": "662d8e8f-a5eb-4a9b-97a0-2c310f228a86",
+      "name": "Set Timestamp"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 17,
+              "triggerAtMinute": "={{ 30 }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        -500
+      ],
+      "id": "a92a45f1-f7dc-4bcb-b043-1e852167dce2",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M",
+          "mode": "list",
+          "cachedResultName": "Home2U Apartment Inquiries",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z-jL9M0pbzWypRDjhXicSiUrw1JLR8pM3X_o2va_X3M/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically",
+              "readRowsUntil": "firstEmptyRow"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        800,
+        -500
+      ],
+      "id": "1ccc7add-fadb-4b9a-9a66-ed640363b342",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jf9fMWOSs2zKvP26",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const oneDayAgo = new Date();\noneDayAgo.setDate(oneDayAgo.getDate() - 1); // 24 hours ago\n\n// Filter rows with Done = 'no' AND Time within last 24 hours\nconst filtered = items.filter(item => {\n  const done = item.json.Done?.toLowerCase();\n  const time = new Date(item.json.Time);\n  return done === \"no\" && time >= oneDayAgo;\n});\n\nreturn filtered;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -500
+      ],
+      "id": "bed533ea-88e0-463d-b732-9321426c7243",
+      "name": "Filter House Requests from Last 24h"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "47aa1319-4715-4a0e-9db5-2ee26a26a3df",
+              "leftValue": "={{ $items().length }}",
+              "rightValue": "={{ 0 }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        -500
+      ],
+      "id": "ccad2236-2810-44b0-9c5c-2a7bfe6d15d2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "7066132844",
+        "text": "=🚪 New House Viewing Requests Alert 🚪\n\nYou have {{ $json.count }} new house viewing request from the last 24 hours that need your attention.\n\nPlease check the Google Sheets tracker and follow up with potential tenants.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1420,
+        -600
+      ],
+      "id": "37447f75-b144-49fa-a000-5265b7a34202",
+      "name": "Telegram1",
+      "webhookId": "4d79aadb-3426-4701-9fcc-9c5c0aab6143",
+      "credentials": {
+        "telegramApi": {
+          "id": "V045HLnWxHaMvVx7",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      count: $items().length\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        -600
+      ],
+      "id": "748ceb83-a3cb-4e8f-84d6-13d86dd6a412",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1um2d7RLVigAobbA2aWxi3ZDApG7yEcK7tBEDULlolNw",
+          "mode": "list",
+          "cachedResultName": "Home2U Tenant sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1um2d7RLVigAobbA2aWxi3ZDApG7yEcK7tBEDULlolNw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1um2d7RLVigAobbA2aWxi3ZDApG7yEcK7tBEDULlolNw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        940,
+        -20
+      ],
+      "id": "dbded237-b957-48f7-aa9a-2fa29eb82c2b",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jf9fMWOSs2zKvP26",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "bc36d8c9-cce1-491c-9182-03aa031b2392",
+              "leftValue": "={{ $json.tenantExists }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1260,
+        -20
+      ],
+      "id": "3f38456a-fa08-478c-9670-2ac7751e35dc",
+      "name": "If tenant email is valid (exists)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get tenant email from the AI output node\nconst incomingEmail = $('AI').first().json.output.email\n\nif (!incomingEmail) {\n  // If email is missing, assume no match\n  return [{ json: { tenantExists: false } }];\n}\n\n// `items` contains rows from Google Sheets\nconst tenantRows = items;\n\n// Look for a matching tenant email\nconst exists = tenantRows.some(row => {\n  const tenantEmail = row.json.Email?.toLowerCase();\n  return tenantEmail === incomingEmail;\n});\n\n// Output result for IF node\nreturn [{ json: { tenantExists: exists } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -20
+      ],
+      "id": "2b94f312-f2f8-4ed8-abac-726c96acbe3c",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "reply",
+        "threadId": "={{ $('Gmail Trigger').item.json.threadId }}",
+        "messageId": "197660b510827c44",
+        "message": "=Hello,  \n\nThank you for your cleaning service request. However, we could not verify your tenant information in our records. Please ensure you are a current tenant or contact our office directly to confirm your details before booking a cleaning service. \n\nIf you believe this is an error, feel free to reply to this message with your full name, unit number, and contact information. Thank you for your understanding. \n\nBest regards, \nTristan, Home2U Apartments Management",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1420,
+        100
+      ],
+      "id": "40b9edbb-42b9-41d6-9604-2266638c7970",
+      "name": "Gmail",
+      "webhookId": "3a6ab9a5-6003-4215-8f43-eb04c6d133f8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wBh09YLnAT3BnDGU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "rondoudou2375@gmail.com",
+        "subject": "New cleaning service booking!",
+        "message": "=Hello,  \n\nYou have a new cleaning booking request:  \n\nTenant Name: {{ $('AI').first().json.output.name }}\nUnit Number: {{ $('AI').first().json.output.unit }}\nRequested Date & Time: {{ $('AI').first().json.output.time }}\nTenant Contact Email: {{ $('AI').first().json.output.email }}\nTenant Phone Number: {{ $('Google Sheets2').first().json.Contact }}\n\nPlease confirm/suggest another time for the booking by choosing an option below.\n\nThank you, \nTristan, Home2U Apartments Management",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Confirm"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1420,
+        -100
+      ],
+      "id": "38a8c0a1-7959-42f5-96b1-c0ae7c648903",
+      "name": "Gmail2",
+      "webhookId": "7a8dbf94-ce18-4062-bd7c-93eac9463af1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wBh09YLnAT3BnDGU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0654bea8-e8cd-445e-992c-afedab66d8b1",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1640,
+        -100
+      ],
+      "id": "0866a182-ba46-44ac-b37b-db06eacd2e6b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('AI').first().json.output.email }} ",
+        "subject": "Cleaning request update",
+        "emailType": "text",
+        "message": "=Hello,\n\nThank you for confirming your cleaning booking for unit {{ $('AI').first().json.output.unit }} on {{ $('AI').first().json.output.time }}.\n\nWe have scheduled the cleaning service accordingly. If you have any questions or need to reschedule, please don't hesitate to contact us.\n\nBest regards,  \nTristan, Home2U Apartments Management",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        -200
+      ],
+      "id": "cf1b8022-3763-4388-b372-2834303595cc",
+      "name": "Gmail1",
+      "webhookId": "aee3265a-269f-4141-8362-fb40891ab5a9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wBh09YLnAT3BnDGU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('AI').first().json.output.email }}",
+        "subject": "Cleaning request update",
+        "emailType": "text",
+        "message": "=Hello,\n\nUnfortunately, the cleaning booking time you requested for unit {{ $('AI').first().json.output.unit }} on {{ $('AI').first().json.output.time }} is not available.\n\nPlease contact me directly by phone (in the guide) to arrange a suitable time.\n\nThank you,\nTristan, Home2U Apartments Management",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        -20
+      ],
+      "id": "f8bd57de-65f2-4926-87cb-cc41a2b02775",
+      "name": "Gmail3",
+      "webhookId": "4aa1e8b5-3f0e-48ae-8d9a-9ad1b26a8b99",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "wBh09YLnAT3BnDGU",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "197665466c86b95a",
+          "threadId": "197665466c86b95a",
+          "snippet": "Hi, I just want to ask a very general question, nothing urgent but do you know any pharmacies around the apartment area? thanks. Tristan",
+          "payload": {
+            "mimeType": "multipart/alternative"
+          },
+          "sizeEstimate": 15044,
+          "historyId": "2570952",
+          "internalDate": "1749768492000",
+          "labels": [
+            {
+              "id": "INBOX",
+              "name": "INBOX"
+            },
+            {
+              "id": "IMPORTANT",
+              "name": "IMPORTANT"
+            },
+            {
+              "id": "CATEGORY_PERSONAL",
+              "name": "CATEGORY_PERSONAL"
+            },
+            {
+              "id": "UNREAD",
+              "name": "UNREAD"
+            }
+          ],
+          "From": "Nguyen Hai Trung Pham <pham6333@mylaurier.ca>",
+          "To": "HAT TRUNG <haitrung2375@gmail.com>",
+          "Subject": "general question"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Timestamp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "AI": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Timestamp": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Filter House Requests from Last 24h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter House Requests from Last 24h": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "If tenant email is valid (exists)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If tenant email is valid (exists)": {
+      "main": [
+        [
+          {
+            "node": "Gmail2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "193253d1-d137-441a-b5b0-592fc64038f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "078234f54f5933aef0fc3fcdd53996291323532293e383572666ecc47eb34884"
+  },
+  "id": "2Dw2LTFipuWvZTU2",
+  "tags": [
+    {
+      "createdAt": "2025-06-12T18:29:25.382Z",
+      "updatedAt": "2025-06-12T18:29:25.382Z",
+      "id": "hPRhAhffbCoILNvt",
+      "name": "Work"
+    }
+  ]
+}
