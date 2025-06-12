@@ -54,74 +54,85 @@ Automate property management with n8n, OpenAI, Google services, and Telegram. Ge
 ```bash
 git clone https://github.com/your-username/property-manager-ai.git
 cd property-manager-ai
-Import Workflow into n8n
-Open your n8n instance.
+```
 
-Import workflow.json via the UI.
+## Import Workflow into n8n
 
-Set Up Credentials
-Gmail
+1. Go to your **n8n** instance.
+2. Import `workflow.json` via the UI.
 
-Telegram Bot
+## Set Up Credentials
 
-Google Sheets
+Configure the following services in your n8n credentials panel:
 
-Google Calendar
+- 📧 **Gmail**
+- 🤖 **Telegram Bot**
+- 📊 **Google Sheets**
+- 📆 **Google Calendar**
+- 🧠 **OpenAI** *(or structured output parser)*
 
-OpenAI (or structured output parser)
+## Update Environment Variables (`.env`)
 
-Update Environment Variables (.env)
-env
-Copy
-Edit
+Set the following variables in your `.env` file:
+
+```env
 TELEGRAM_CHAT_ID=your_chat_id
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-GOOGLE_SHEET_ID=your_google_sheet_id
-OPENAI_API_KEY=your_openai_api_key  # if applicable
-🧪 Example Use Case
-Incoming Email:
+TELEGRAM_BOT_TOKEN=your_bot_token
+GOOGLE_SHEET_ID=your_sheet_id
+OPENAI_API_KEY=your_openai_api_key  # optional if using OpenAI
+```
 
-"Hi, I live in Unit 504. There's a leak under the bathroom sink flooding the floor. Please help!"
+## 🧪 Example Use Case
 
-What Happens:
-🧠 AI classifies the message as Urgent
+**Incoming Email:**
 
-📝 Summary and key details are extracted
+> "Hi, I live in Unit 504. There's a leak under the bathroom sink flooding the floor. Please help!"
 
-🚨 A Telegram alert is instantly sent to the property manager
+### 🔄 What Happens:
 
-🧠 Ideas for Expansion
-📲 Add SMS alerts using Twilio
+- 🧠 AI classifies the message as **Urgent**
+- 📝 Summary and key details are extracted
+- 🚨 A **Telegram alert** is instantly sent to the property manager
 
-🏢 Support multiple properties or managers
+---
 
-💾 Replace Google Sheets with a database (e.g., Airtable or PostgreSQL)
+## 🧠 Ideas for Expansion
 
-🔁 Sync tenant list dynamically
+- 📲 Add **SMS alerts** using Twilio
+- 🏢 Support **multiple properties** or managers
+- 💾 Replace Google Sheets with a database (e.g., **Airtable** or **PostgreSQL**)
+- 🔁 Sync tenant list dynamically
 
-📸 Screenshots
+---
+
+## 📸 Screenshots
+
 Include screenshots of:
 
-✅ n8n Workflow
+- ✅ **n8n Workflow**
+- ✅ **Telegram Alerts**
+- ✅ **Sample Google Sheets View**
 
-✅ Telegram Alerts
+---
 
-✅ Sample Google Sheets View
+## 🤝 Contributions
 
-🤝 Contributions
-Pull requests and issues are welcome. Let’s automate housing together!
+Pull requests and issues are welcome.  
+Let’s automate housing together! 🛠️
 
-📄 License
-MIT License — Use freely, but give credit where due.
+---
 
-✨ Built With
-n8n
+## 📄 License
 
-OpenAI
+**MIT License** — Use freely, but please give credit where due.
 
-Google Cloud Platform
+---
 
-Telegram Bot API
+## ✨ Built With
 
+- [n8n](https://n8n.io)
+- [OpenAI](https://openai.com)
+- [Google Cloud Platform](https://cloud.google.com)
+- [Telegram Bot API](https://core.telegram.org/bots/api)
 
 
