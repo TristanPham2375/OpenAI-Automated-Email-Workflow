@@ -2,7 +2,7 @@
 
 # 🏠 AI-Powered Property Management System (n8n)
 
-This project is a smart, automated property management assistant built with **n8n**, using OpenAI API to classify and triage tenant emails, integrate with Google services and uses Google Cloud Platform, and send alerts to the manager for timely action. It’s ideal for landlords and small property managers looking to automate routine communication. I designed it to help my work as a property manager for a housing agency back in highschool. 
+This project is a smart, automated property management assistant built with **n8n**, using OpenAI API to classify and triage tenant emails, integrate with Google services and uses Google Cloud Platform, and send alerts to the manager for timely action. It’s ideal for landlords and small property managers looking to automate routine communication. I designed it to help my work as a property manager for a housing agency back in highschool.
 
 ![Screenshot 2025-06-12 190614](https://github.com/user-attachments/assets/312656b3-499d-49ec-bb9f-fb65e8cb0fc8)
 
@@ -81,6 +81,35 @@ TELEGRAM_BOT_TOKEN=your_bot_token
 GOOGLE_SHEET_ID=your_sheet_id
 OPENAI_API_KEY=your_openai_api_key  # optional if using OpenAI
 ```
+
+## 🐳 Host with Docker
+
+This project can be easily hosted using Docker.
+Here’s a basic example using Docker Compose:
+
+# docker-compose.yml
+version: "3"
+
+services:
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=yourpassword
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - GOOGLE_SHEET_ID=${GOOGLE_SHEET_ID}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./n8n-data:/home/node/.n8n
+
+Start it with:
+```bash
+docker-compose up -d
+```
+Then visit http://localhost:5678 to access n8n.
 
 ## 🧪 Example Use Case
 
