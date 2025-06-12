@@ -87,7 +87,9 @@ OPENAI_API_KEY=your_openai_api_key  # optional if using OpenAI
 This project can be easily hosted using Docker.
 Here’s a basic example using Docker Compose:
 
-# docker-compose.yml
+### 🐳 Example `docker-compose.yml`
+
+```yaml
 version: "3"
 
 services:
@@ -104,7 +106,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - ./n8n-data:/home/node/.n8n
-
+```
 Start it with:
 ```bash
 docker-compose up -d
