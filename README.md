@@ -4,7 +4,6 @@
 
 This project is a smart, automated property management assistant built with **n8n**, using OpenAI API to classify and triage tenant emails, integrate with Google services, and send alerts to the manager for timely action. It’s ideal for landlords and small property managers looking to automate routine communication. I designed it to help my work as a property manager for a housing agency back in highschool. 
 
----
 ![Screenshot 2025-06-12 190614](https://github.com/user-attachments/assets/312656b3-499d-49ec-bb9f-fb65e8cb0fc8)
 
 ## ⚙️ Features
